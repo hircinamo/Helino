@@ -3,33 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nahal Web3 Pro - Gold Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/alchemy-sdk@latest/dist/alchemy-sdk.bundle.iife.js"></script>
+    <title>Nahal | Web3 Gold Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <style>
         :root {
-            --gold: #FFD700;
-            --dark-gold: #B8860B;
+            --gold: #D4AF37;
+            --dark-gold: #996515;
             --white: #FFFFFF;
             --bg: #FDFDFD;
-            --black: #1A1A1A;
-            --border: 4px solid #1A1A1A;
+            --glass: rgba(255, 255, 255, 0.9);
+            --border: 4px solid #000;
         }
 
         body {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'Outfit', sans-serif;
             background-color: var(--bg);
             margin: 0;
             padding: 0;
-            color: var(--black);
             overflow-x: hidden;
         }
 
         /* Luxury Header */
-        .header {
+        header {
             background: var(--white);
             border-bottom: var(--border);
-            padding: 25px 50px;
+            padding: 15px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -38,295 +37,239 @@
             z-index: 100;
         }
 
-        .logo {
-            font-size: 28px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: -1px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .logo { font-weight: 700; font-size: 1.5rem; color: #000; letter-spacing: -1px; }
+        .logo span { color: var(--gold); }
 
-        .gold-pill {
-            background: var(--gold);
-            padding: 5px 15px;
-            border: var(--border);
-            box-shadow: 4px 4px 0px var(--black);
-            font-size: 14px;
-        }
-
-        /* Hero Section */
+        /* Dashboard Container */
         .main-container {
-            max-width: 1300px;
+            max-width: 1200px;
             margin: 40px auto;
-            padding: 0 20px;
+            padding: 20px;
         }
 
-        .wallet-card {
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        /* Card Design - Cartoon Professional Mix */
+        .card {
             background: var(--white);
             border: var(--border);
-            padding: 40px;
-            border-radius: 30px;
-            box-shadow: 12px 12px 0px var(--gold);
-            text-align: center;
-            margin-bottom: 50px;
-            animation: slideUp 0.6s ease-out;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 10px 10px 0px #000;
+            transition: 0.2s ease;
         }
 
-        @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+        .card:hover { transform: translate(-3px, -3px); box-shadow: 15px 15px 0px var(--gold); }
 
+        .balance-title { color: #666; font-size: 0.9rem; text-transform: uppercase; font-weight: 700; }
+        .balance-amount { font-size: 2.5rem; font-weight: 700; margin: 10px 0; }
+
+        /* Input & Buttons */
         input {
-            width: 80%;
-            max-width: 600px;
-            padding: 20px;
-            font-size: 18px;
+            width: 100%;
+            padding: 15px;
             border: var(--border);
-            border-radius: 15px;
-            margin-bottom: 20px;
-            outline: none;
-            box-shadow: 6px 6px 0px #eee;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            box-sizing: border-box;
         }
 
         .btn-main {
             background: var(--gold);
-            padding: 20px 40px;
-            font-size: 20px;
+            color: #000;
+            border: var(--border);
+            padding: 15px 30px;
             font-weight: 700;
-            border: var(--border);
-            border-radius: 15px;
             cursor: pointer;
-            box-shadow: 6px 6px 0px var(--black);
-            transition: all 0.2s;
-        }
-
-        .btn-main:active {
-            transform: translate(4px, 4px);
-            box-shadow: 2px 2px 0px var(--black);
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
-        }
-
-        .stat-box {
-            background: var(--white);
-            border: var(--border);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 8px 8px 0px var(--black);
-            position: relative;
-        }
-
-        /* Transaction Table */
-        .table-container {
-            background: var(--white);
-            border: var(--border);
-            border-radius: 25px;
-            overflow: hidden;
-            box-shadow: 10px 10px 0px var(--gold);
-        }
-
-        table {
+            border-radius: 12px;
             width: 100%;
-            border-collapse: collapse;
+            box-shadow: 5px 5px 0px #000;
         }
 
-        th {
-            background: var(--black);
-            color: var(--gold);
-            padding: 20px;
-            text-align: left;
-        }
+        .btn-main:active { box-shadow: 0px 0px 0px; transform: translate(5px, 5px); }
 
-        td {
-            padding: 18px;
+        /* Transaction List */
+        .tx-list { margin-top: 20px; max-height: 400px; overflow-y: auto; }
+        .tx-item {
             border-bottom: 2px solid #eee;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        tr:hover { background: #fffdf0; }
-
-        /* Notification Settings */
-        .settings-btn {
-            background: var(--white);
-            border: var(--border);
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
+        .tag {
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border: 2px solid #000;
         }
 
-        #settings-modal {
+        .tag-eth { background: #e0e7ff; }
+        .tag-base { background: #0052ff; color: white; }
+        .tag-monad { background: #836efb; color: white; }
+
+        /* Settings Modal */
+        #settings-ui {
             display: none;
             position: fixed;
-            top: 20%; left: 50%;
-            transform: translateX(-50%);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+
+        .modal-content {
             background: white;
             border: var(--border);
+            width: 90%;
+            max-width: 500px;
+            margin: 50px auto;
             padding: 30px;
-            z-index: 1000;
-            width: 350px;
-            box-shadow: 15px 15px 0px var(--black);
+            border-radius: 24px;
         }
-
-        .loader {
-            display: none;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--gold);
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 10px auto;
-        }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <div class="logo">
-        👑 NAHAL <span class="gold-pill">WEB3 PRO</span>
-    </div>
-    <button class="settings-btn" onclick="toggleSettings()">⚙️ API Settings</button>
-</div>
+<header>
+    <div class="logo">NAHAL <span>WEB3</span></div>
+    <button class="btn-main" style="width: auto; padding: 10px 20px;" onclick="openSettings()">SETTINGS</button>
+</header>
 
 <div class="main-container">
-    <div class="wallet-card">
-        <h1>Luxury Asset Tracker</h1>
-        <p>Monitor transactions across all major networks in real-time.</p>
-        <input type="text" id="walletInput" placeholder="Enter Address (0x...)">
-        <br>
-        <button class="btn-main" onclick="startTracking()">START MONITORING</button>
-        <div class="loader" id="loader"></div>
-    </div>
-
-    <div class="stats-grid">
-        <div class="stat-box">
-            <h3>💰 Total Balance</h3>
-            <h1 id="balanceText" style="color: var(--dark-gold);">$0.00</h1>
+    <div class="grid-layout">
+        <div class="card">
+            <h3>Wallet Tracker</h3>
+            <p style="font-size: 0.8rem; color: #777;">Monitor ETH, Base, and Monad live.</p>
+            <input type="text" id="wallet-address" placeholder="Enter Wallet Address (0x...)">
+            <button class="btn-main" onclick="initMonitor()">START LIVE FEED</button>
         </div>
-        <div class="stat-box">
-            <h3>🔔 Telegram Status</h3>
-            <h2 id="tgStatus">Inactive</h2>
+
+        <div class="card">
+            <div class="balance-title">Total Portfolio Value</div>
+            <div class="balance-amount" id="total-val">$0.00</div>
+            <div id="chain-balances" style="font-size: 0.9rem; font-weight: 500;">
+                ETH: 0 | BASE: 0 | MONAD: 0
+            </div>
         </div>
     </div>
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Network</th>
-                    <th>Amount</th>
-                    <th>To / From</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody id="txBody">
-                </tbody>
-        </table>
+    <div class="card" style="margin-top: 30px;">
+        <h3>Live Transaction History</h3>
+        <div class="tx-list" id="tx-log">
+            <p style="color: #999;">Waiting for connection... Transactions will appear here in real-time.</p>
+        </div>
     </div>
 </div>
 
-<div id="settings-modal">
-    <h3>Configure Secure API</h3>
-    <p style="font-size: 11px;">Data is saved locally in your browser.</p>
-    <input type="password" id="apiKey" placeholder="Alchemy API Key" style="width: 90%; font-size: 12px;">
-    <input type="password" id="tgToken" placeholder="Telegram Bot Token" style="width: 90%; font-size: 12px;">
-    <input type="text" id="tgChat" placeholder="Telegram Chat ID" style="width: 90%; font-size: 12px;">
-    <button class="btn-main" style="font-size: 14px; padding: 10px;" onclick="saveSettings()">SAVE CONFIG</button>
+<div id="settings-ui">
+    <div class="modal-content">
+        <h2 style="margin-top:0">🔑 API Configuration</h2>
+        <label><b>Ethereum Alchemy URL</b></label>
+        <input type="password" id="eth-key" placeholder="https://eth-mainnet.g.alchemy.com/v2/...">
+        
+        <label><b>Base Alchemy URL</b></label>
+        <input type="password" id="base-key" placeholder="https://base-mainnet.g.alchemy.com/v2/...">
+
+        <label><b>Monad RPC URL</b></label>
+        <input type="password" id="monad-key" placeholder="Monad RPC URL">
+
+        <label><b>Telegram Bot Token</b></label>
+        <input type="password" id="tg-token" placeholder="Token">
+        
+        <label><b>Telegram Chat ID</b></label>
+        <input type="text" id="tg-chat" placeholder="Chat ID">
+
+        <button class="btn-main" onclick="saveSettings()">SAVE & REBOOT</button>
+        <button class="btn-main" style="background:#eee; margin-top:10px;" onclick="openSettings()">CLOSE</button>
+    </div>
 </div>
 
 <script>
-    function toggleSettings() {
-        const m = document.getElementById('settings-modal');
-        m.style.display = m.style.display === 'block' ? 'none' : 'block';
+    function openSettings() {
+        const ui = document.getElementById('settings-ui');
+        ui.style.display = ui.style.display === 'block' ? 'none' : 'block';
+        
+        // Fill existing keys
+        document.getElementById('eth-key').value = localStorage.getItem('eth_api') || '';
+        document.getElementById('base-key').value = localStorage.getItem('base_api') || '';
+        document.getElementById('monad-key').value = localStorage.getItem('monad_api') || '';
+        document.getElementById('tg-token').value = localStorage.getItem('tg_token') || '';
+        document.getElementById('tg-chat').value = localStorage.getItem('tg_chat') || '';
     }
 
     function saveSettings() {
-        localStorage.setItem('alc_key', document.getElementById('apiKey').value);
-        localStorage.setItem('tg_token', document.getElementById('tgToken').value);
-        localStorage.setItem('tg_chat', document.getElementById('tgChat').value);
-        alert('Settings Locked Securely!');
-        toggleSettings();
+        localStorage.setItem('eth_api', document.getElementById('eth-key').value);
+        localStorage.setItem('base_api', document.getElementById('base-key').value);
+        localStorage.setItem('monad_api', document.getElementById('monad-key').value);
+        localStorage.setItem('tg_token', document.getElementById('tg-token').value);
+        localStorage.setItem('tg_chat', document.getElementById('tg-chat').value);
+        alert("Keys Saved Locally!");
         location.reload();
     }
 
-    async function startTracking() {
-        const address = document.getElementById('walletInput').value;
-        const apiKey = localStorage.getItem('alc_key');
-        
-        if (!address || !apiKey) {
-            alert('Please add API Key in Settings and enter a Wallet Address!');
-            return;
-        }
-
-        document.getElementById('loader').style.display = 'block';
-        
-        // Alchemy Setup
-        const settings = { apiKey: apiKey, network: "eth-mainnet" };
-        const alchemy = new alchemy.Alchemy(settings);
-
-        try {
-            // 1. Fetch Balance
-            const balance = await alchemy.core.getBalance(address, "latest");
-            const ethBalance = parseFloat(ethers.utils.formatEther(balance)).toFixed(4);
-            document.getElementById('balanceText').innerText = ethBalance + " ETH";
-
-            // 2. Fetch Transactions
-            const txs = await alchemy.core.getAssetTransfers({
-                fromBlock: "0x0",
-                fromAddress: address,
-                category: ["external", "erc20", "nft"],
-                maxCount: 10
-            });
-
-            renderTransactions(txs.transfers);
-            
-            // Telegram Notification
-            sendNotify("Wallet Scan Complete for: " + address + "\nBalance: " + ethBalance + " ETH");
-
-        } catch (err) {
-            console.error(err);
-            alert("Error fetching data. Check your API Key.");
-        }
-        document.getElementById('loader').style.display = 'none';
-    }
-
-    function renderTransactions(transfers) {
-        const body = document.getElementById('txBody');
-        body.innerHTML = '';
-        
-        transfers.forEach(tx => {
-            const row = `<tr>
-                <td><b>${tx.category.toUpperCase()}</b></td>
-                <td>Mainnet</td>
-                <td style="color:var(--dark-gold)">${tx.value.toFixed(4)} ${tx.asset}</td>
-                <td>${tx.to.substring(0,6)}...${tx.to.substring(tx.to.length-4)}</td>
-                <td><span class="gold-pill" style="box-shadow:none; font-size:10px;">SUCCESS</span></td>
-            </tr>`;
-            body.innerHTML += row;
-        });
-    }
-
-    async function sendNotify(msg) {
+    async function sendAlert(msg) {
         const token = localStorage.getItem('tg_token');
         const chat = localStorage.getItem('tg_chat');
-        if(token && chat) {
-            await fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat}&text=${encodeURIComponent(msg)}`);
+        if(!token || !chat) return;
+        fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat}&text=${encodeURIComponent(msg)}`);
+    }
+
+    async function initMonitor() {
+        const addr = document.getElementById('wallet-address').value;
+        if(!addr.startsWith('0x')) return alert("Invalid Address");
+
+        document.getElementById('tx-log').innerHTML = "<b>[System]</b> Connecting to chains...";
+        
+        // Logic for fetching balances from 3 different APIs
+        // we'll use a loop to check each provider saved in localStorage
+        const chains = [
+            { name: 'Ethereum', key: 'eth_api', tag: 'tag-eth' },
+            { name: 'Base', key: 'base_api', tag: 'tag-base' },
+            { name: 'Monad', key: 'monad_api', tag: 'tag-monad' }
+        ];
+
+        for (let chain of chains) {
+            const rpc = localStorage.getItem(chain.key);
+            if(!rpc) continue;
+
+            try {
+                const provider = new ethers.JsonRpcProvider(rpc);
+                const bal = await provider.getBalance(addr);
+                const formattedBal = ethers.formatEther(bal);
+                
+                // Add to UI
+                addTxToUI(chain.name, `Initial Balance Check: ${formattedBal}`, chain.tag);
+                
+                // Real-time listener (WebSocket equivalent)
+                provider.on("block", async (blockNumber) => {
+                    const block = await provider.getBlock(blockNumber, true);
+                    block.transactions.forEach(tx => {
+                        if(tx.from.toLowerCase() === addr.toLowerCase() || (tx.to && tx.to.toLowerCase() === addr.toLowerCase())) {
+                            const msg = `🔔 New Transaction on ${chain.name}!\nHash: ${tx.hash}\nValue: ${ethers.formatEther(tx.value)} ETH`;
+                            addTxToUI(chain.name, `New Tx: ${tx.hash.substring(0,10)}...`, chain.tag);
+                            sendAlert(msg);
+                        }
+                    });
+                });
+            } catch (e) {
+                console.error("Error on " + chain.name, e);
+            }
         }
     }
 
-    window.onload = () => {
-        if(localStorage.getItem('tg_token')) document.getElementById('tgStatus').innerText = "Active ✅";
+    function addTxToUI(chain, text, tagClass) {
+        const log = document.getElementById('tx-log');
+        const div = document.createElement('div');
+        div.className = 'tx-item';
+        div.innerHTML = `<span><span class="tag ${tagClass}">${chain}</span> ${text}</span> <span>${new Date().toLocaleTimeString()}</span>`;
+        log.prepend(div);
     }
 </script>
 
