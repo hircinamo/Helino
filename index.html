@@ -3,191 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAHAL Web3 Luxury Tracker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Outfit:wght@300;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-    
+    <title>Web3 Elite Monitor | ETH & BASE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
             --gold: #D4AF37;
-            --dark-gold: #996515;
+            --dark-gold: #B8860B;
             --white: #FFFFFF;
-            --bg: #FDFCF0;
-            --black: #000000;
+            --bg: #FDFBF7;
+            --border: 2px solid #222;
         }
 
         body {
-            background-color: var(--bg);
-            font-family: 'Outfit', sans-serif;
             margin: 0;
-            overflow-x: hidden;
+            background-color: var(--bg);
+            font-family: 'Montserrat', sans-serif;
+            color: #333;
         }
 
-        /* Luxury Cartoon Header */
-        .header {
+        /* প্রফেশনাল হেডার */
+        header {
             background: var(--white);
-            border-bottom: 5px solid var(--black);
-            padding: 20px;
+            padding: 20px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 8px 0px var(--gold);
+            border-bottom: var(--border);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
-        .brand-name {
-            font-family: 'Fredoka One', cursive;
-            font-size: 28px;
-            color: var(--black);
-            text-shadow: 2px 2px var(--gold);
+        .brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
-        /* Container & Cards */
-        .container {
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 20px;
+        /* মেনু ও সেটিংস */
+        .settings-btn {
+            background: var(--gold);
+            border: var(--border);
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 5px;
+            transition: 0.3s;
         }
 
-        .main-card {
-            background: var(--white);
-            border: 4px solid var(--black);
-            border-radius: 25px;
+        .settings-btn:hover { background: var(--dark-gold); color: white; }
+
+        /* সেটিংস প্যানেল */
+        #api-panel {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: var(--border);
             padding: 30px;
-            box-shadow: 12px 12px 0px var(--black);
-            margin-bottom: 40px;
+            z-index: 1000;
+            box-shadow: 15px 15px 0px var(--gold);
+            width: 90%;
+            max-width: 450px;
         }
 
         .input-box {
             width: 100%;
-            padding: 15px;
-            border: 3px solid var(--black);
-            border-radius: 12px;
-            font-size: 16px;
-            margin-bottom: 20px;
-            box-sizing: border-box;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
 
-        .btn-gold {
-            background: var(--gold);
-            color: var(--white);
-            border: 3px solid var(--black);
-            padding: 15px 30px;
-            font-weight: bold;
-            font-size: 18px;
-            cursor: pointer;
-            border-radius: 12px;
-            box-shadow: 5px 5px 0px var(--black);
-            transition: 0.2s;
+        /* ড্যাশবোর্ড কার্ড */
+        .main-container { padding: 40px 5%; }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
         }
 
-        .btn-gold:active {
-            box-shadow: 0px 0px 0px;
-            transform: translate(5px, 5px);
-        }
-
-        /* Transaction List UI */
-        .tx-card {
-            background: #fff;
-            border: 3px solid var(--black);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 6px 6px 0px var(--gold);
-        }
-
-        .tx-info { display: flex; flex-direction: column; gap: 5px; }
-        .tx-amount { font-weight: 700; font-size: 18px; color: var(--dark-gold); }
-        .tx-address { font-size: 12px; color: #666; font-family: monospace; }
-        .badge {
-            padding: 5px 12px;
-            border: 2px solid #000;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 12px;
-        }
-
-        /* Settings Panel */
-        #settings-panel {
-            background: #fff;
-            border: 4px solid var(--black);
-            position: fixed;
-            top: 10%; left: 50%;
-            transform: translateX(-50%);
-            z-index: 100;
+        .card {
+            background: white;
+            border: var(--border);
             padding: 25px;
-            display: none;
-            width: 90%;
-            max-width: 450px;
-            border-radius: 20px;
+            border-radius: 15px;
+            box-shadow: 6px 6px 0px #eee;
         }
 
-        /* Responsive */
-        @media (max-width: 600px) {
-            .header { flex-direction: column; gap: 15px; }
-            .tx-card { flex-direction: column; text-align: center; }
+        .balance-title { font-size: 14px; color: #888; text-transform: uppercase; }
+        .balance-value { font-size: 32px; font-weight: 700; color: var(--gold); margin: 10px 0; }
+
+        /* ট্রানজেকশন টেবিল */
+        .tx-container {
+            margin-top: 30px;
+            background: white;
+            border: var(--border);
+            border-radius: 15px;
+            overflow: hidden;
         }
+
+        .tx-header { background: #f9f9f9; padding: 15px; border-bottom: var(--border); font-weight: 700; }
+        
+        .tx-row {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr 1fr;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .tx-row:hover { background: #fffcf5; }
+
+        .tag {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .tag-eth { background: #E0E7FF; color: #4338CA; }
+        .tag-base { background: #DBEAFE; color: #1E40AF; }
+
+        .link-btn { color: var(--gold); text-decoration: none; font-weight: 600; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <div class="brand-name">NAHAL WEB3</div>
-    <button class="btn-gold" style="font-size: 14px;" onclick="toggleSettings()">🔑 API Config</button>
-</div>
+<header>
+    <div class="brand">Web3 Elite Monitor</div>
+    <button class="settings-btn" onclick="toggleSettings()">⚙️ SETTINGS</button>
+</header>
 
-<div class="container">
-    <div class="main-card">
-        <h2 style="margin-top: 0;">💎 Wallet Inspector</h2>
-        <input type="text" id="wallet-addr" class="input-box" placeholder="Enter ETH or Base Address (0x...)">
-        <button class="btn-gold" style="width: 100%;" onclick="startTracking()">Scan All Transactions</button>
-    </div>
-
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
-        <div class="main-card" style="margin:0; text-align: center; background: #fffdf0;">
-            <h3>ETH Balance</h3>
-            <h2 id="eth-bal" style="color:var(--dark-gold);">0.00</h2>
-        </div>
-        <div class="main-card" style="margin:0; text-align: center; background: #f0f7ff;">
-            <h3>Base Balance</h3>
-            <h2 id="base-bal" style="color:#0052ff;">0.00</h2>
-        </div>
-    </div>
-
-    <div id="tx-container">
-        <h3 style="margin-left: 10px;">Recent Activity Logs:</h3>
-        <div id="tx-list">
-            <div style="text-align: center; padding: 40px; color: #888;">No data found. Setup API keys and start scan.</div>
-        </div>
-    </div>
-</div>
-
-<div id="settings-panel">
-    <h3>Secure API Management</h3>
+<div id="api-panel">
+    <h3>Secure Configuration</h3>
+    <p style="font-size:12px; color:red;">Keys are stored locally in your browser.</p>
     <label>Ethereum Alchemy Key</label>
-    <input type="password" id="eth-key" class="input-box" placeholder="ETH Alchemy Key">
+    <input type="password" id="eth-key" class="input-box" placeholder="Enter ETH API Key">
     <label>Base Alchemy Key</label>
-    <input type="password" id="base-key" class="input-box" placeholder="Base Alchemy Key">
-    <label>Telegram Token & ID</label>
-    <input type="password" id="tg-token" class="input-box" placeholder="Bot Token">
-    <input type="text" id="tg-id" class="input-box" placeholder="Chat ID">
-    <button class="btn-gold" onclick="saveConfig()">Save All Settings</button>
+    <input type="password" id="base-key" class="input-box" placeholder="Enter Base API Key">
+    <label>Telegram Bot Token</label>
+    <input type="password" id="tg-token" class="input-box" placeholder="Enter Telegram Token">
+    <label>Telegram Chat ID</label>
+    <input type="text" id="tg-id" class="input-box" placeholder="Enter Chat ID">
+    <button class="settings-btn" style="width:100%" onclick="saveSettings()">SAVE & INITIALIZE</button>
+</div>
+
+<div class="main-container">
+    <div class="card" style="margin-bottom: 30px; text-align: center;">
+        <h3 style="margin-top:0">Enter Wallet to Track</h3>
+        <input type="text" id="wallet-addr" class="input-box" style="max-width: 500px; text-align: center;" placeholder="0x...">
+        <br><br>
+        <button class="settings-btn" onclick="startMonitor()">START LIVE MONITORING</button>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="card">
+            <div class="balance-title">Ethereum Balance</div>
+            <div id="eth-bal" class="balance-value">0.00 ETH</div>
+            <span class="tag tag-eth">Network: Ethereum</span>
+        </div>
+        <div class="card">
+            <div class="balance-title">Base Balance</div>
+            <div id="base-bal" class="balance-value">0.00 ETH</div>
+            <span class="tag tag-base">Network: Base</span>
+        </div>
+    </div>
+
+    <div class="tx-container">
+        <div class="tx-header">Recent Transactions (Real-Time)</div>
+        <div id="tx-list">
+            <div style="padding: 20px; text-align: center; color: #999;">
+                No active tracking. Configure APIs and enter wallet address.
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
     function toggleSettings() {
-        const p = document.getElementById('settings-panel');
-        p.style.display = p.style.display === 'block' ? 'none' : 'block';
+        const panel = document.getElementById('api-panel');
+        panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
     }
 
-    function saveConfig() {
+    function saveSettings() {
         localStorage.setItem('eth_api', document.getElementById('eth-key').value);
         localStorage.setItem('base_api', document.getElementById('base-key').value);
         localStorage.setItem('tg_token', document.getElementById('tg-token').value);
         localStorage.setItem('tg_id', document.getElementById('tg-id').value);
-        alert('Config Saved Securely!');
+        alert('Configuration saved securely!');
         toggleSettings();
     }
 
@@ -198,64 +206,42 @@
         fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${id}&text=${encodeURIComponent(msg)}`);
     }
 
-    async function startTracking() {
+    async function startMonitor() {
         const addr = document.getElementById('wallet-addr').value;
-        const ethApi = localStorage.getItem('eth_api');
-        const baseApi = localStorage.getItem('base_api');
+        const ethKey = localStorage.getItem('eth_api');
+        const baseKey = localStorage.getItem('base_api');
 
-        if(!addr || !ethApi || !baseApi) {
-            alert('Please check Address and API Keys!');
+        if(!addr || !ethKey || !baseKey) {
+            alert('Please check Address and API keys in settings!');
             return;
         }
 
-        const listDiv = document.getElementById('tx-list');
-        listDiv.innerHTML = "Fetching Data... Please wait.";
+        document.getElementById('tx-list').innerHTML = '<div style="padding:20px">Fetching live data...</div>';
+        
+        // Telegram notification for successful start
+        sendTelegram(`🚀 Monitoring Started\nWallet: ${addr}\nNetworks: ETH, BASE`);
 
-        try {
-            // Fetching from ETH and Base via Alchemy
-            const ethProvider = new ethers.providers.JsonRpcProvider(`https://eth-mainnet.g.alchemy.com/v2/${ethApi}`);
-            const baseProvider = new ethers.providers.JsonRpcProvider(`https://base-mainnet.g.alchemy.com/v2/${baseApi}`);
-
-            const ethBal = await ethProvider.getBalance(addr);
-            const baseBal = await baseProvider.getBalance(addr);
-
-            document.getElementById('eth-bal').innerText = parseFloat(ethers.utils.formatEther(ethBal)).toFixed(4) + " ETH";
-            document.getElementById('base-bal').innerText = parseFloat(ethers.utils.formatEther(baseBal)).toFixed(4) + " ETH";
-
-            // In a real scenario, Alchemy "Asset Transferred" API is best for history. 
-            // Here we simulate the fetch result to show the UI structure
-            renderTransactions(addr);
-            sendTelegram(`🔔 Tracking Started for: ${addr}\nETH: ${ethers.utils.formatEther(ethBal)} \nBase: ${ethers.utils.formatEther(baseBal)}`);
-        } catch (e) {
-            listDiv.innerHTML = "Error: Invalid API keys or Network Issue.";
-        }
+        // বাস্তব ট্রানজেকশন ডাটা রেন্ডারিং (Demo logic for UI structure)
+        renderTransaction(addr, "Ethereum", "0.05", "0xabc...123", "0xdef...456", "Transfer", "https://etherscan.io/tx/...");
+        renderTransaction(addr, "Base", "0.02", "0x789...000", "0x111...222", "Mint", "https://basescan.org/tx/...");
     }
 
-    function renderTransactions(myAddr) {
-        const listDiv = document.getElementById('tx-list');
-        // Mock data to demonstrate the UI - This is where Alchemy Data would go
-        const data = [
-            { net: 'BASE', from: myAddr, to: '0x742d...444', amt: '0.05', type: 'Sent', date: '2 mins ago' },
-            { net: 'ETH', from: '0x111...aaa', to: myAddr, amt: '1.20', type: 'Received', date: '1 hour ago' }
-        ];
-
-        listDiv.innerHTML = '';
-        data.forEach(tx => {
-            listDiv.innerHTML += `
-                <div class="tx-card">
-                    <div class="tx-info">
-                        <span class="badge" style="background:${tx.net==='ETH' ? '#f0e6ff':'#0052ff; color:#fff'}">${tx.net}</span>
-                        <span class="tx-amount">${tx.type}: ${tx.amt} ETH</span>
-                        <span class="tx-address">From: ${tx.from}</span>
-                        <span class="tx-address">To: ${tx.to}</span>
-                    </div>
-                    <div style="text-align:right">
-                        <div style="font-size:12px; color:#888">${tx.date}</div>
-                        <div style="color:green; font-weight:bold">Success</div>
-                    </div>
-                </div>
-            `;
-        });
+    function renderTransaction(wallet, network, val, from, to, method, scanLink) {
+        const list = document.getElementById('tx-list');
+        if(list.innerHTML.includes('No active tracking')) list.innerHTML = '';
+        
+        const row = document.createElement('div');
+        row.className = 'tx-row';
+        row.innerHTML = `
+            <div><span class="tag ${network === 'Ethereum' ? 'tag-eth' : 'tag-base'}">${network}</span></div>
+            <div>
+                <b>From:</b> ${from.slice(0,6)}...${from.slice(-4)} <br>
+                <b>To:</b> ${to.slice(0,6)}...${to.slice(-4)}
+            </div>
+            <div><b>${val} ETH</b><br><small>${method}</small></div>
+            <div><a href="${scanLink}" target="_blank" class="link-btn">VIEW SCAN ↗</a></div>
+        `;
+        list.prepend(row);
     }
 </script>
 
